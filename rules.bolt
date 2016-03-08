@@ -1,0 +1,170 @@
+path /user_question_banks/{userid}/{questionBankUniqueID} is Post;
+
+path /question_bank_memberships/{questionBankUniqueID}/{UserID} is Post;
+
+path /question_bank/{questionBankUniqueID} is Timesec;
+
+path /question_bank_topics/{questionBankUniqueID}/{autotopicid1} is Autotopicid;
+
+path /question_bank_topics/{questionBankUniqueID}/{autotopicid1}/subtopics/{autoSubTopicID} is AutoSubTopicID;
+
+
+path /question_bank_topics/{questionBankUniqueID}/{autotopicid1}/subtopics/{autoSubTopicID}/questions/{questionID} is QuestionID;
+
+path /question_bank_topics/{questionBankUniqueID}/{autotopicid1}/subtopics/{autoSubTopicID}/questions/{questionID}{
+    validate() { isBoolean }
+}
+
+path /question_bank_topics/{questionBankUniqueID}/{autotopicid1}/questions/{questionID}{
+    validate() { isBoolean }
+}
+
+path /question_bank_quizes/{questionBankID} is QuestionBankID;
+
+path /group_quizes/{groupID} is QuestionBankID;
+
+path /quizes/{quizID} is QuizID;
+
+path /quiz-topics/{quizID}/{autotopicID} is AutotopicID;
+
+path /quiz-topics/{quizID}/{autotopicID}/subtopics is ChildautoSubTopicID;
+
+path /quiz-topics/{quizID}/{autotopicID}/subtopics/{autoSubTopicID} is AutoSubTopicID;
+
+
+path /quiz-topics/{quizID}/{autotopicID}/subtopics/{autoSubTopicID}/questions/{questionID}{
+    validate() { isBoolean }
+}
+
+
+
+path /{quizID}/{questionID} is Foxi;
+
+
+path /{quizID}/{questionID}/options is OPT;
+
+path /quiz_answers/{quizID}/{questionID} is Bindas;
+
+path /quiz_answers/{quizID}/{questionID}/options/{optionID} is Rapchik;
+
+path /quiz_answer_sheet/{groupid}/{quizid}/{userid}/{questionID} is Boolee;
+
+
+
+
+
+//post
+
+type Post {
+     'member-type': NameString
+}
+
+type Timesec{
+
+    timestamp: Numberfortime,
+    title: String,
+    desc: String
+
+}
+
+type Autotopicid{
+    timestamp: Numberfortime,
+    title: String,
+    desc: String,
+    subtopics: Object,
+    questions: Object
+}
+
+
+type AutoSubTopicID{
+
+    timestamp: Numberfortime,
+    title: String,
+    desc: String,
+    questions: Object
+
+}
+
+type QuestionID{
+
+}
+
+type QuestionBankID{
+    quizID: Boolean
+}
+
+type QuizID{
+    title: String,
+    desc: String,
+    duration: Number,
+    "num-questions": Number
+
+
+}
+
+type AutotopicID{
+        timestamp: Numberfortime,
+        title: String,
+        desc: String,
+        subtopics: Object
+}
+
+type ChildautoSubTopicID {
+    autoSubTopicID: Object
+}
+
+type Foxi{
+    title: String,
+    type: Numbertypeing,
+    desc: String,
+    options: Object
+
+
+}
+
+type OPT{
+
+    optionID: Object
+}
+
+type Bindas{
+
+    title: String,
+    type: Numbertypeing,
+    "desc-html": String,
+    "discussion-html": String,
+    options: Object
+
+}
+
+type Rapchik{
+    html: String,
+    correct: Boolean,
+    "discussion-html": String
+
+}
+
+type Boolee{
+
+    optionID: Boolean,
+    correct: Boolean
+
+}
+
+
+//extension
+
+type NameString extends Number {
+  validate() { this.val() == 1 || this.val() == 2 }
+}
+
+type Numberfortime extends Number{
+    validate() { this.val() <= Date.now}
+}
+
+type Numbertypeing extends Number{
+
+    validate(){ this.val() == 1 || this.val() == 2 || this.val() == 3 }
+
+}
+
