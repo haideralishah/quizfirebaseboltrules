@@ -1,5 +1,39 @@
 {
   "rules": {
+    "question_bank_memberships": {
+      "$questionBankUniqueID": {
+        "$UserID": {
+          ".validate": "newData.hasChildren(['member-type'])",
+          "member-type": {
+            ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2)"
+          },
+          "$other": {
+            ".validate": "false"
+          },
+          ".read": "true",
+          ".write": "newData.child('member').val() - type == 1 && (data.val() == null && newData.val() != null) && (auth != null && auth.uid == $UserID) || auth != null && (root.child('question_bank_memberships').child($questionBankUniqueID).child(auth.uid).val() != null && root.child('question_bank_memberships').child($questionBankUniqueID).child(auth.uid).child('member-type').val() == 1) && newData.child('member-type').val() == 2"
+        }
+      }
+    },
+    "question-bank": {
+      "$questionBankUniqueID": {
+        ".validate": "newData.hasChildren(['timestamp', 'title', 'desc'])",
+        "timestamp": {
+          ".validate": "newData.isNumber() && newData.val() == now"
+        },
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "desc": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "auth != null && root.child('question_bank_memberships').child($questionBankUniqueID).child(auth.uid).val() != null",
+        ".write": "auth != null && root.child('question_bank_memberships').child($questionBankUniqueID).child(auth.uid).val() != null"
+      }
+    },
     "user_question_banks": {
       "$userid": {
         "$questionBankUniqueID": {
@@ -13,40 +47,10 @@
         }
       }
     },
-    "question_bank_memberships": {
-      "$questionBankUniqueID": {
-        "$UserID": {
-          ".validate": "newData.hasChildren(['member-type'])",
-          "member-type": {
-            ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2)"
-          },
-          "$other": {
-            ".validate": "false"
-          }
-        }
-      }
-    },
-    "question_bank": {
-      "$questionBankUniqueID": {
-        ".validate": "newData.hasChildren(['timestamp', 'title', 'desc'])",
-        "timestamp": {
-          ".validate": "newData.isNumber() && newData.val() <= Date.now"
-        },
-        "title": {
-          ".validate": "newData.isString()"
-        },
-        "desc": {
-          ".validate": "newData.isString()"
-        },
-        "$other": {
-          ".validate": "false"
-        }
-      }
-    },
     "question_bank_topics": {
       "$questionBankUniqueID": {
-        "$autotopicid": {
-          ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'subtopics', 'questions'])",
+        "$autotopicid1": {
+          ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'subtopics', 'question'])",
           "timestamp": {
             ".validate": "newData.isNumber() && newData.val() <= Date.now"
           },
@@ -57,17 +61,49 @@
             ".validate": "newData.isString()"
           },
           "subtopics": {
-            ".validate": "newData.hasChildren()"
-          },
-          "questions": {
-            ".validate": "newData.hasChildren()"
-          },
-          "$other": {
-            ".validate": "false"
-          }
-        },
-        "$autotopicid1": {
-          "subtopics": {
+            ".validate": "newData.hasChildren(['
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            '])",
             "$autoSubTopicID": {
               ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'questions'])",
               "timestamp": {
@@ -82,7 +118,7 @@
               "questions": {
                 ".validate": "newData.hasChildren()",
                 "$questionID": {
-                  ".validate": "isBoolean"
+                  ".validate": "newData.isBoolean()"
                 }
               },
               "$other": {
@@ -90,10 +126,14 @@
               }
             }
           },
-          "questions": {
+          "question": {
+            ".validate": "newData.hasChildren()",
             "$questionID": {
-              ".validate": "isBoolean"
+              ".validate": "newData.isBoolean()"
             }
+          },
+          "$other": {
+            ".validate": "false"
           }
         }
       }
@@ -101,22 +141,16 @@
     "question_bank_quizes": {
       "$questionBankID": {
         ".validate": "newData.hasChildren(['quizID'])",
-        "quizID": {
+        "$quizID": {
           ".validate": "newData.isBoolean()"
-        },
-        "$other": {
-          ".validate": "false"
         }
       }
     },
     "group_quizes": {
       "$groupID": {
         ".validate": "newData.hasChildren(['quizID'])",
-        "quizID": {
+        "$quizID": {
           ".validate": "newData.isBoolean()"
-        },
-        "$other": {
-          ".validate": "false"
         }
       }
     },
@@ -155,12 +189,6 @@
           },
           "subtopics": {
             ".validate": "newData.hasChildren(['autoSubTopicID'])",
-            "autoSubTopicID": {
-              ".validate": "newData.hasChildren()"
-            },
-            "$other": {
-              ".validate": "false"
-            },
             "$autoSubTopicID": {
               ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'questions'])",
               "timestamp": {
@@ -175,7 +203,7 @@
               "questions": {
                 ".validate": "newData.hasChildren()",
                 "$questionID": {
-                  ".validate": "isBoolean"
+                  ".validate": "newData.isBoolean()"
                 }
               },
               "$other": {
@@ -189,29 +217,28 @@
         }
       }
     },
-    "$quizID": {
-      "$questionID": {
-        ".validate": "newData.hasChildren(['title', 'type', 'desc', 'options'])",
-        "title": {
-          ".validate": "newData.isString()"
-        },
-        "type": {
-          ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
-        },
-        "desc": {
-          ".validate": "newData.isString()"
-        },
-        "options": {
-          ".validate": "newData.hasChildren(['optionID'])",
-          "optionID": {
-            ".validate": "newData.hasChildren()"
+    "quiz_questions": {
+      "$quizID": {
+        "$questionID": {
+          ".validate": "newData.hasChildren(['title', 'type', 'desc', 'options'])",
+          "title": {
+            ".validate": "newData.isString()"
+          },
+          "type": {
+            ".validate": "newData.isNumber() && (newData.val() == 1 || newData.val() == 2 || newData.val() == 3)"
+          },
+          "desc": {
+            ".validate": "newData.isString()"
+          },
+          "options": {
+            ".validate": "newData.hasChildren(['optionID'])",
+            "$optionID": {
+              ".validate": "newData.hasChildren()"
+            }
           },
           "$other": {
             ".validate": "false"
           }
-        },
-        "$other": {
-          ".validate": "false"
         }
       }
     },
@@ -232,7 +259,7 @@
             ".validate": "newData.isString()"
           },
           "options": {
-            ".validate": "newData.hasChildren()",
+            ".validate": "newData.hasChildren(['optionID'])",
             "$optionID": {
               ".validate": "newData.hasChildren(['html', 'correct', 'discussion-html'])",
               "html": {

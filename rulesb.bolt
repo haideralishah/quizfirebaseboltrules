@@ -1,0 +1,297 @@
+//----------------------------------
+//      RULES *** RULES *** RULES
+//----------------------------------
+
+
+//----------------------------------
+//      rules for user question bank
+//----------------------------------
+
+path /rules/user-question-banks/{Userid}/{questionBankUniqueID} is MemberTypeValid;
+
+
+//----------------------------------
+//      rules for question bank memberships
+//----------------------------------
+
+path /rules/question-bank-memberships/{questionBankUniqueID}/{UserID} is MemberTypeValid;
+
+//----------------------------------
+//      rules for question bank
+//----------------------------------
+path /rules/question-bank/{questionBankUniqueID} is QuestionBank;
+
+//----------------------------------
+//      rules for question bank topics & AutoSubTopicID
+//----------------------------------
+path /rules/question-bank-topics/{questionBankUniqueID}/{autotopicid} is QuestionBankTopics{
+
+    /subtopics {
+
+        validate() {this.hasChildren(['autoSubTopicID']);}
+        /{autoSubTopicID} is AutoSubTopicID{
+        }
+
+        /{autoSubTopicID}/questions/{questions}{
+            validate() { this.isBoolean() }
+        }
+
+
+    }
+
+    /questions/{questions}{
+        validate() { this.isBoolean() }
+    }
+
+
+}
+
+//----------------------------------
+//      rules for question-bank-quizes
+//----------------------------------
+
+path /rules/question-bank-quizes/{questionBankID}{
+    validate() {this.hasChildren(['quizID']);}
+
+    /{quizID}{
+        validate() { this.isBoolean() }
+    }
+
+}
+
+
+//----------------------------------
+//      rules for group-quizes
+//----------------------------------
+
+path /rules/group-quizes/{groupID}{
+    validate() {this.hasChildren(['quizID']);}
+    /{quizID}{
+        validate() { this.isBoolean() }
+    }
+
+}
+
+
+//----------------------------------
+//      rules for quizes
+//----------------------------------
+
+path /rules/quizes/{quizID} is Quizes{
+
+
+}
+
+//----------------------------------
+//      rules for quiz-topics
+//----------------------------------
+
+path /rules/quiz-topics/{quizID}/{autotopicID} is QuestionBankTopics{
+
+    /subtopics {
+
+        validate() {this.hasChildren(['autoSubTopicID']);}
+        /{autoSubTopicID} is AutoSubTopicID{
+        }
+
+        /{autoSubTopicID}/questions/{questions}{
+            validate() { this.isBoolean() }
+        }
+
+
+    }
+
+    /questions/{questions}{
+        validate() { this.isBoolean() }
+    }
+
+
+}
+
+
+//----------------------------------
+//      rules for quiz-questions
+//----------------------------------
+
+path /rules/quiz-questions/{quizID}/{questionID} is QuestionID{
+
+
+
+}
+
+//----------------------------------
+//      rules for quiz-answers
+//----------------------------------
+
+path /rules/quiz-answers/{quizID}/{questionID} is QuizAnswers{
+
+    /options {
+        validate() {this.hasChildren(['optionID']);}
+        /{optionID} is OptionID{
+
+
+        }
+    }
+}
+//----------------------------------
+//      rules for quiz-answer-sheet
+//----------------------------------
+
+path /rules/{groupid}/{quizid}/{userid}/{questionID} is QuestionIDGroupid{
+
+}
+
+
+
+
+
+
+
+
+//----------------------------------
+//      TYPING *** TYPING *** TYPING
+//----------------------------------
+
+
+//----------------------------------
+//      type definition for member type
+//----------------------------------
+
+type MemberTypeValid {
+    "member-type": NumberForMemberType
+}
+
+//----------------------------------
+//      type definition for QuestionBank
+//----------------------------------
+type QuestionBank {
+    timestamp: TimeStampNumber,
+    title: String,
+    desc: String
+}
+
+//----------------------------------
+//      type definition for QuestionBankTopics
+//----------------------------------
+type QuestionBankTopics{
+    timestamp: TimeStampNumber,
+    title: String,
+    desc: String,
+    subtopics: Object,
+    questions: Object
+}
+
+
+//----------------------------------
+//      type definition for AutoSubTopicID
+//----------------------------------
+
+type AutoSubTopicID {
+
+    timestamp: TimeStampNumber,
+    title: String,
+    desc: String,
+    questions: Object
+
+    //AutoSubTopicID: Object
+
+}
+
+//----------------------------------
+//      type definition for Quizes
+//----------------------------------
+
+type Quizes{
+
+        title: String,
+        desc: String,
+        duration: Number,
+        "num-questions": Number
+
+}
+
+//----------------------------------
+//      type definition for QuestionID
+//----------------------------------
+type QuestionID{
+
+    title: String,
+    type: TypeValidation,
+    desc: String,
+    options: Object
+
+}
+
+//----------------------------------
+//      type definition for QuizAnswers
+//----------------------------------
+type QuizAnswers{
+    title: String,
+    type: TypeValidation,
+    "desc-html": String,
+    "discussion-html": String,
+    options: Object
+
+}
+
+//----------------------------------
+//      type definition for OptionID
+//----------------------------------
+type OptionID{
+    html: String,
+    correct: Boolean,
+    "discussion-html": String
+
+}
+
+
+type QuestionIDGroupid{
+    optionID: Boolean,
+    correct: Boolean
+}
+
+
+
+
+
+//----------------------------------
+//      EXTENSION *** EXTENSION *** EXTENSION
+//----------------------------------
+
+
+//----------------------------------
+//      extension for NumberForMemberType
+//----------------------------------
+
+type NumberForMemberType extends Number{
+    validate() { this.val() == 1 || this.val() == 2 }
+}
+
+
+//----------------------------------
+//      extension for TimeStampNumber
+//----------------------------------
+
+type TimeStampNumber extends Number {
+    validate() { this.val() <= Date.now }
+}
+
+//----------------------------------
+//      extension for TypeValidation
+//----------------------------------
+
+type TypeValidation extends Number{
+    validate() { this.val() == 1 || this.val() == 2 || this.val() == 3 }
+}
+
+//----------------------------------
+
+
+
+
+
+
+
+
+
+

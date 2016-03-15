@@ -1,10 +1,13 @@
-path /user_question_banks/{userid}/{questionBankUniqueID} is Post;
+path /user_question_banks/{userid}/{questionBankUniqueID} is Post{
+
+
+}
 
 path /question_bank_memberships/{questionBankUniqueID}/{UserID} is Post;
 
 path /question_bank/{questionBankUniqueID} is Timesec;
 
-path /question_bank_topics/{questionBankUniqueID}/{autotopicid1} is Autotopicid;
+path /question_bank_topics/{questionBankUniqueID}/{autotopicid} is Autotopicid;
 
 path /question_bank_topics/{questionBankUniqueID}/{autotopicid1}/subtopics/{autoSubTopicID} is AutoSubTopicID;
 
