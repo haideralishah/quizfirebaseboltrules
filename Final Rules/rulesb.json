@@ -48,6 +48,12 @@
         "$autotopicid": {
           "subtopics": {
             "$autoSubTopicID": {
+              "questions": {
+                "$questionID": {
+                  ".validate": "newData.isBoolean()"
+                },
+                ".validate": "newData.hasChildren()"
+              },
               ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'questions'])",
               "timestamp": {
                 ".validate": "newData.isNumber() && newData.val() <= Date.now"
@@ -57,12 +63,6 @@
               },
               "desc": {
                 ".validate": "newData.isString()"
-              },
-              "questions": {
-                ".validate": "newData.hasChildren()",
-                "$questionID": {
-                  ".validate": "newData.isBoolean()"
-                }
               },
               "$other": {
                 ".validate": "false"
@@ -133,6 +133,12 @@
         "$autotopicID": {
           "subtopics": {
             "$autoSubTopicID": {
+              "questions": {
+                "$questions": {
+                  ".validate": "newData.isBoolean()"
+                },
+                ".validate": "newData.hasChildren()"
+              },
               ".validate": "newData.hasChildren(['timestamp', 'title', 'desc', 'questions'])",
               "timestamp": {
                 ".validate": "newData.isNumber() && newData.val() <= Date.now"
@@ -142,12 +148,6 @@
               },
               "desc": {
                 ".validate": "newData.isString()"
-              },
-              "questions": {
-                ".validate": "newData.hasChildren()",
-                "$questions": {
-                  ".validate": "newData.isBoolean()"
-                }
               },
               "$other": {
                 ".validate": "false"

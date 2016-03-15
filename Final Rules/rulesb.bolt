@@ -7,40 +7,36 @@
 //      rules for user question bank
 //----------------------------------
 
-path /user-question-banks/{userid}/{questionBankUniqueID} is MemberTypeValid{}
+path /user-question-banks/{userid}/{questionBankUniqueID} is UserQuestionBanksType{}
 
 
 //----------------------------------
 //      rules for question bank memberships
 //----------------------------------
 
-path /question-bank-memberships/{questionBankUniqueID}/{UserID} is MemberTypeValid;
+path /question-bank-memberships/{questionBankUniqueID}/{UserID} is UserQuestionBanksType{}
 
 //----------------------------------
 //      rules for question bank
 //----------------------------------
-path /question-bank/{questionBankUniqueID} is QuestionBank;
+path /question-bank/{questionBankUniqueID} is QuestionBankType{}
 
 //----------------------------------
 //      rules for question bank topics & AutoSubTopicID
 //----------------------------------
-path /question-bank-topics/{questionBankUniqueID}/{autotopicid} is QuestionBankTopics{
+path /question-bank-topics/{questionBankUniqueID}/{autotopicid} is QuestionBankTopicsType{
 
     /subtopics {
 
         validate() {this.hasChildren(['autoSubTopicID']);}
         /{autoSubTopicID} is AutoSubTopicID{
-        }
+          /questions/{questionID}{
+                    validate() { this.isBoolean() }
+                }
+              }
+            }
 
-        /{autoSubTopicID}/questions/{questionID}{
-            validate() { this.isBoolean() }
-        }
-
-
-    }
-
-    /question/{questionID}{
-        validate() { this.isBoolean() }
+    /question/{questionID} is Boolean{
     }
 
 
@@ -53,9 +49,7 @@ path /question-bank-topics/{questionBankUniqueID}/{autotopicid} is QuestionBankT
 path /question-bank-quizes/{questionBankID}{
     validate() {this.hasChildren(['quizID']);}
 
-    /{quizID}{
-        validate() { this.isBoolean() }
-    }
+    /{quizID} is Boolean{  }
 
 }
 
@@ -66,9 +60,8 @@ path /question-bank-quizes/{questionBankID}{
 
 path /group-quizes/{groupID}{
     validate() {this.hasChildren(['quizID']);}
-    /{quizID}{
-        validate() { this.isBoolean() }
-    }
+    /{quizID} is Boolean{  }
+
 
 }
 
@@ -77,35 +70,25 @@ path /group-quizes/{groupID}{
 //      rules for quizes
 //----------------------------------
 
-path /quizes/{quizID} is Quizes{
-
-
-}
+path /quizes/{quizID} is QuizesType{ }
 
 //----------------------------------
 //      rules for quiz-topics
 //----------------------------------
 
-path /quiz-topics/{quizID}/{autotopicID} is QuestionBankTopics{
+path /quiz-topics/{quizID}/{autotopicID} is QuestionBankTopicsType{
 
     /subtopics {
 
         validate() {this.hasChildren(['autoSubTopicID']);}
         /{autoSubTopicID} is AutoSubTopicID{
+        /questions/{questions}{
+                    validate() { this.isBoolean() }
+          }
         }
+     }
 
-        /{autoSubTopicID}/questions/{questions}{
-            validate() { this.isBoolean() }
-        }
-
-
-    }
-
-    /questions/{questionsID}{
-        validate() { this.isBoolean() }
-    }
-
-
+    /questions/{questionsID} is Boolean{ }
 }
 
 
@@ -113,31 +96,24 @@ path /quiz-topics/{quizID}/{autotopicID} is QuestionBankTopics{
 //      rules for quiz-questions
 //----------------------------------
 
-path /quiz-questions/{quizID}/{questionID} is QuestionID{
-
-
-
-}
+path /quiz-questions/{quizID}/{questionID} is QuestionIDType{ }
 
 //----------------------------------
 //      rules for quiz-answers
 //----------------------------------
 
-path /quiz-answers/{quizID}/{questionID} is QuizAnswers{
+path /quiz-answers/{quizID}/{questionID} is QuizAnswersType{
 
     /options {
         validate() {this.hasChildren(['optionID']);}
-        /{optionID} is OptionID{
-
-
-        }
+        /{optionID} is OptionID{ }
     }
 }
 //----------------------------------
 //      rules for quiz-answer-sheet
 //----------------------------------
 
-path /quiz-answer-sheet/{groupid}/{quizid}/{userid}/{questionID} is QuestionIDGroupid{
+path /quiz-answer-sheet/{groupid}/{quizid}/{userid}/{questionID} is QuestionIDGroupidType{
 
 }
 
@@ -154,27 +130,27 @@ path /quiz-answer-sheet/{groupid}/{quizid}/{userid}/{questionID} is QuestionIDGr
 
 
 //----------------------------------
-//      type definition for member type
+//      type definition for UserQuestionBanksType
 //----------------------------------
 
-type MemberTypeValid {
+type UserQuestionBanksType {
     "member-type": MemberType
 }
 
 //----------------------------------
-//      type definition for QuestionBank
+//      type definition for QuestionBankType
 //----------------------------------
-type QuestionBank {
-    timestamp: TimeStampNumber,
+type QuestionBankType {
+    timestamp: CurrentTimeStamp,
     title: String,
     desc: String
 }
 
 //----------------------------------
-//      type definition for QuestionBankTopics
+//      type definition for QuestionBankTopicsType
 //----------------------------------
-type QuestionBankTopics{
-    timestamp: TimeStampNumber,
+type QuestionBankTopicsType{
+    timestamp: CurrentTimeStamp,
     title: String,
     desc: String,
     subtopics: Object,
@@ -188,7 +164,7 @@ type QuestionBankTopics{
 
 type AutoSubTopicID {
 
-    timestamp: TimeStampNumber,
+    timestamp: CurrentTimeStamp,
     title: String,
     desc: String,
     questions: Object
@@ -198,10 +174,10 @@ type AutoSubTopicID {
 }
 
 //----------------------------------
-//      type definition for Quizes
+//      type definition for QuizesType
 //----------------------------------
 
-type Quizes{
+type QuizesType{
 
         title: String,
         desc: String,
@@ -211,14 +187,14 @@ type Quizes{
 }
 
 //----------------------------------
-//      type definition for QuestionID
+//      type definition for QuestionIDType
 //----------------------------------
-type QuestionID{
+type QuestionIDType{
 
     title: String,
-    type: TypeValidation,
+    type: QuestionType,
     desc: String,
-   options: Optiontype
+    options: Optiontype
 
 }
 
@@ -228,11 +204,11 @@ type Optiontype {
 }
 
 //----------------------------------
-//      type definition for QuizAnswers
+//      type definition for QuizAnswersType
 //----------------------------------
-type QuizAnswers{
+type QuizAnswersType{
     title: String,
-    type: TypeValidation,
+    type: QuestionType,
     "desc-html": String,
     "discussion-html": String,
     options: Optiontype
@@ -250,8 +226,8 @@ type OptionID{
 }
 
 
-type QuestionIDGroupid{
-    optionID: Boolean,
+type QuestionIDGroupidType{
+    optionID: Boolean,  //discuss
     correct: Boolean
 }
 
@@ -274,18 +250,18 @@ type MemberType extends Number {
 
 
 //----------------------------------
-//      extension for TimeStampNumber
+//      extension for CurrentTimeStamp
 //----------------------------------
 
-type TimeStampNumber extends Number {
+type CurrentTimeStamp extends Number {
     validate() { this.val() <= Date.now }
 }
 
 //----------------------------------
-//      extension for TypeValidation
+//      extension for QuestionType
 //----------------------------------
 
-type TypeValidation extends Number{
+type QuestionType extends Number{
     validate() { this.val() == 1 || this.val() == 2 || this.val() == 3 }
 }
 
