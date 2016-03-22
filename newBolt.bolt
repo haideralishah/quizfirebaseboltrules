@@ -224,7 +224,9 @@ function isCurrentUserGroupMembersOwner($groupid) {
 
 
 
-path /quizes/{questionBankID}/{quizID} is Quizes {
+path /quizes/{questionBankID}/{quizID} is Quize {
+    validate() {this.hasChildren(['questions']);}
+
 
     /questions/{chapterID}/{topicID}/{questionID} is Boolean{
 
@@ -242,10 +244,9 @@ path /quizes/{questionBankID}/{quizID} is Quizes {
 //     Type Quizes
 //----------------------------------
 
-type Quizes{
+type Quize{
     title: String,
     description: String,
-    duration: Number,
-    questions: Object
+    duration: Number
 
 }

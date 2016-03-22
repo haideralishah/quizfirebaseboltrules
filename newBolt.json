@@ -191,8 +191,7 @@
                   ".read": "root.child('question-bank-memberships').child(questionBankUniqueID).child(auth.uid).val() != null"
                 }
               }
-            },
-            ".validate": "newData.hasChildren()"
+            }
           },
           ".validate": "newData.hasChildren(['title', 'description', 'duration', 'questions'])",
           "title": {
